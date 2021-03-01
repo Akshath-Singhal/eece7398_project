@@ -94,11 +94,11 @@ write_symbolic_term_to_mfile(q,dq,params,pMh,pMt,pm1,pm2,pcm,P2)
 % Velocities - found by taking partial derivative w.r.t. q, then multiply
 % by dq/dt
 
-vMh = jacobian(pMh, q) * dq;
-vMt = jacobian(pMt, q) * dq;
-vm1 = jacobian(pm1, q) * dq;
-vm2 = jacobian(pm2, q) * dq;
-vcm = jacobian(pcm, q) * dq;
+vMh = [diff(pMh, q1); diff(pMh, q2); diff(pMh, q3)] * dq;
+vMt = [diff(pMt, q1); diff(pMt, q2); diff(pMt, q3)] * dq;
+vm1 = [diff(pm1, q1); diff(pMt, q2); diff(pMt, q3)] * dq;
+vm2 = [diff(pm2, q); diff(pm2, q); diff(pm2, q)] * dq;
+vcm = diff(pcm, q) * dq;
 
 % Write velocities to a file
 % Inputs:
