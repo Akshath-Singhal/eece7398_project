@@ -116,63 +116,67 @@ vcm = jacobian(pcm, q) * dq;
 write_symbolic_term_to_mfile(q,dq,params,vMh,vMt,vm1,vm2,vcm)
 
 
-% % Kinetic energy
-% %%%%%%%%%%%%%%%%%% Compute kinetic energy of each component here %%%%%%%%%%
-% K_Mh =  
-% K_Mt = 
-% K_m1 = 
-% K_m2 = 
-% % Total KE
-% K = 
-% 
-% % Potential energy
-% %%%%%%%%%%%%%%%%%% Compute potnetial energy of each component here %%%%%%%%
-% V_Mh = 
-% V_Mt = 
-% V_m1 = 
-% V_m2 = 
-% % Total PE
-% V = V_m1 + V_Mh + V_Mt + V_m2;
-% 
-% % Inertia matrix
-% %%%%%%%%%%%%%%%%%% Compute D matrix here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% D = 
-% 
-% % Coriolis matrix
-% %%%%%%%%%%%%%%%%%% Coriolis matrix here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% N = max(size(q));
-% syms C
-% for k = 1:N
-%     for j = 1:N
-%         C(k,j) = 0*g;
-%         for i = 1:N
-%             C(k,j) = 
-%         end
-%     end
-% end
-% C = simplify(C);
-% 
-% % Gravity matrix
-% %%%%%%%%%%%%%%%%%% Compute Gravity term here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% G = 
-% 
-% %%%%%%%%%%%%%%%%%% What is control input matrix? %%%%%%%%%%%%%%%%%%%%%%%%%%
-% B = 
-% 
-% % Write 3 link model to file
-% % Inputs:
-% %       q
-% %       dq
-% %       params
-% %
-% % Outputs: 
-% %       D: Inertia matrix
-% %       C: Coriolis matrix
-% %       G: Gravity matrix
-% %       B: 
-% %
-% write_symbolic_term_to_mfile(q,dq,params,D,C,G,B)
-% 
+% Kinetic energy
+%%%%%%%%%%%%%%%%%% Compute kinetic energy of each component here %%%%%%%%%%
+
+K_Mh = (1/2) * Mh * (vMh(1, 1).^2 + vMh(2, 1).^2);
+K_Mt = (1/2) * Mt * (vMt(1, 1).^2 + vMt(2, 1).^2);
+K_m1 = (1/2) * m * (vm1(1, 1).^2 + vm1(2, 1).^2);
+K_m2 = (1/2) * m * (vm2(1, 1).^2 + vm2(2, 1).^2);
+% Total KE
+K = K_Mh + K_Mt + K_m1 + K_m2;
+
+% Potential energy
+%%%%%%%%%%%%%%%%%% Compute potnetial energy of each component here %%%%%%%%
+V_Mh = Mh * g * pMh(2, 1);
+V_Mt = Mt * g * pMt(2, 1);
+V_m1 = m * g * pm1(2, 1);
+V_m2 = m * g * pm2(2, 1);
+% Total PE
+V = V_m1 + V_Mh + V_Mt + V_m2;
+
+% Inertia matrix
+%%%%%%%%%%%%%%%%%% Compute D matrix here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+D = Mh * jacobian(pMh, q)' * jacobian(pMh, q) + Mt * jacobian(pMt, q)' * jacobian(pMt, q) + m * jacobian(pm1, q)' * jacobian(pm1, q) + m * jacobian(pm2, q)' * jacobian(pm2, q);
+D = simplify(D);
+
+% Coriolis matrix
+%%%%%%%%%%%%%%%%%% Coriolis matrix here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+N = max(size(q));
+syms C
+
+for k = 1:N
+    for j = 1:N
+        C(k,j) = 0*g;
+        for i = 1:N
+            C(k,j) = C(k,j) + (1/2) * (diff(D(k,j), q(i)) + diff(D(k,i), q(j)) - diff(D(i,j),q(k))) * dq(i);
+        end
+    end
+end
+C = simplify(C);
+
+% Gravity matrix
+%%%%%%%%%%%%%%%%%% Compute Gravity term here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+G = [diff(V, q(1)); diff(V, q(2)); diff(V, q(3))];
+
+%%%%%%%%%%%%%%%%%% What is control input matrix? %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+B = [diff(q(2), q(1)), diff(q(3), q(1)); diff(q(2), q(2)), diff(q(3), q(2)); diff(q(2), q(3)), diff(q(3), q(3))];
+
+% Write 3 link model to file
+% Inputs:
+%       q
+%       dq
+%       params
+%
+% Outputs: 
+%       D: Inertia matrix
+%       C: Coriolis matrix
+%       G: Gravity matrix
+%       B: 
+%
+write_symbolic_term_to_mfile(q,dq,params,D,C,G,B)
+
 % %-------------------------------------------------------------------------%
 % %%%% Impact map
 % 
