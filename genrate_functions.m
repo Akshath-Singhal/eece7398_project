@@ -210,7 +210,7 @@ K_m2e = (1/2) * Mh * (vm2_e(1, 1).^2 + vm2_e(2, 1).^2);
 Ke = K_m1e + K_Mhe + K_Mte + K_m2e;
 
 % Extended inertia matrix
-De = Mh * jacobian(pMh, qe)' * jacobian(pMh, qe) + Mt * jacobian(pMt, qe)' * jacobian(pMt, qe) + m * jacobian(pm1, qe)' * jacobian(pm1, qe) + m * jacobian(pm2, qe)' * jacobian(pm2, qe);
+De = Mh * jacobian(pMh_e, qe)' * jacobian(pMh_e, qe) + Mt * jacobian(pMt_e, qe)' * jacobian(pMt_e, qe) + m * jacobian(pm1_e, qe)' * jacobian(pm1_e, qe) + m * jacobian(pm2_e, qe)' * jacobian(pm2_e, qe);
 De = simplify(De);
 
 E = jacobian(P2e, qe);
@@ -237,7 +237,7 @@ write_symbolic_term_to_mfile(q,dq,params,De,E,dY_dq)
 
 % Vector fields
 fx = simplify([dq; D \ ((-1 * C * dq) - G)]);
-gx = [zeros(3, 2); B];
+gx = [zeros(3, 2); D \ B];
 
 % Bezier poly - needed for output function
 syms s delq
