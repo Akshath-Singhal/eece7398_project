@@ -177,143 +177,144 @@ B = [diff(q(2), q(1)), diff(q(3), q(1)); diff(q(2), q(2)), diff(q(3), q(2)); dif
 %
 write_symbolic_term_to_mfile(q,dq,params,D,C,G,B)
 
-% %-------------------------------------------------------------------------%
-% %%%% Impact map
-% 
-% % Using same psotion vectors as above, but taking partial with respect to qe
-% % instead
-% 
-% % Extended configuration variables
-% p_e = [p_h; p_v];
-% 
-% qe = [q; p_h; p_v];
-% dqe = [dq; dp_h; dp_v];
-% 
-% % Extended position
-% pMh_e = pMh + p_e;
-% pMt_e = pMt + p_e;
-% pm1_e = pm1 + p_e;
-% pm2_e = pm2 + p_e;
-% P2e = P2 + p_e;
-% 
-% % Extended velocities
-% vMh_e = 
-% vMt_e = 
-% vm1_e = 
-% vm2_e = 
-% 
-% K_Mhe =  
-% K_Mte = 
-% K_m1e = 
-% K_m2e = 
-% 
-% Ke = K_m1e + K_Mhe + K_Mte + K_m2e;
-% 
-% % Extended inertia matrix
-% De = 
-% 
-% E = 
-% 
-% % Partial of any point on biped, hip chosen in this case
-% dY_dq = jacobian(pMh_e,q);
-% 
-% % Write impact map to a file
-% % Inputs:
-% %       q
-% %       dq
-% %       params
-% %
-% % Outputs: Matrices needed to compile impact map
-% %       De: Extended inertia matrix
-% %       E:
-% %       dY_dq:
-% %       
-% write_symbolic_term_to_mfile(q,dq,params,De,E,dY_dq)
-% 
-% 
-% %-------------------------------------------------------------------------%
-% %%%% For controller
-% 
-% % Vector fields
-% fx = 
-% gx = 
-% 
-% % Bezier poly - needed for output function
-% syms s delq
-% %s = (q1 - q1_plus)/delq; 
-% %delq = q1_minus - q1_plus 
-% %ds/dt = dq1/delq; ds/dq1 = 1/delq;
-% 
-% syms a21 a22 a23 a24 a25 
-% syms a31 a32 a33 a34 a35
-% 
-% a2 = [a21 a22 a23 a24 a25];
-% a3 = [a31 a32 a33 a34 a35];
-% M = 4;
-% 
-% b2 = 0; b3 = 0;
-% for k = 0:M
-%     b2 = b2 + a2(1,k+1)*(factorial(M)/(factorial(k)*factorial(M-k)))*s^k*(1-s)^(M-k);
-% end
-% 
-% for k = 0:M
-%     b3 = b3 + a3(1,k+1)*(factorial(M)/(factorial(k)*factorial(M-k)))*s^k*(1-s)^(M-k);
-% end
-% 
-% % Defining outputs
-% 
-% h = [q2 - b2; q3 - b3];
-% 
-% % y_dot = Lfh = dh/dx*fx - independent of gx*u since relative degree is 2
-% % However, h is a function of (s,q2,q3), not q1 directly, so the following
-% % is used:
-% % dh/dq1 = dh/ds*ds/dq1 = dh/ds*1/delq
-% %
-% % Temporary variable that multiples the 1st column with 1/delq
-% temp = sym(eye(6)); temp(1)  = 1/delq;
-% 
-% Lfh = jacobian(h,[s; q2; q3; dq])*temp*fx;
-% 
-% dLfh = jacobian(Lfh,[s; q2; q3; dq])*temp;
-% 
-% % Write matrix used in feedback linearization - d/dx(Lfh) to file
-% % Inputs:
-% %       s = (q1 - q1_plus)/delq: gait timing variable
-% %       delq = q1_minus - q1_plus: difference in cyclic variable during gait 
-% %       dq1
-% %       params: 
-% %       a2: bezier coefficents (1st - 5th) for q2
-% %       a3: bezier coefficents (1st - 5th) for q3
-% %
-% % Outputs:
-% %       dLfh: partial of Lfh, to be used to compute L2fh and LgLfh
-% %
-% write_symbolic_term_to_mfile([s,delq],dq1,[a2,a3],dLfh);
-% 
-% 
-% 
-% %-------------------------------------------------------------------------%
-% %%%% For Zero Dynamics
-% 
-% 
-% db_ds2 = 0;
-% for k = 0:M-1
-%     db_ds2 = db_ds2 + (a2(1,k+2)-a2(1,k+1))*(factorial(M)/(factorial(k)*factorial(M-k-1)))*s^k*(1-s)^(M-k-1);
-% end
-% 
-% db_ds3 = 0;
-% for k = 0:M-1
-%     db_ds3 = db_ds3 + (a3(1,k+2)-a3(1,k+1))*(factorial(M)/(factorial(k)*factorial(M-k-1)))*s^k*(1-s)^(M-k-1);
-% end
-% 
-% partial_db_ds2 = jacobian(db_ds2,s)*dq1/delq;
-% 
-% partial_db_ds3 = jacobian(db_ds3,s)*dq1/delq;
-% 
-% beta1 = [partial_db_ds2; partial_db_ds3]*dq1/delq;
-% 
-% eta2 = jacobian(K,dq1);
-% 
-% write_symbolic_term_to_mfile(s,[dq1, delq],[a2, a3],beta1)
-% 
-% write_symbolic_term_to_mfile(q,dq,params,eta2)
+%-------------------------------------------------------------------------%
+%%%% Impact map
+
+% Using same psotion vectors as above, but taking partial with respect to qe
+% instead
+
+% Extended configuration variables
+p_e = [p_h; p_v];
+
+qe = [q; p_h; p_v];
+dqe = [dq; dp_h; dp_v];
+
+% Extended position
+pMh_e = pMh + p_e;
+pMt_e = pMt + p_e;
+pm1_e = pm1 + p_e;
+pm2_e = pm2 + p_e;
+P2e = P2 + p_e;
+
+% Extended velocities
+vMh_e = jacobian(pMh_e, qe) * dqe;
+vMt_e = jacobian(pMt_e, qe) * dqe;
+vm1_e = jacobian(pm1_e, qe) * dqe;
+vm2_e = jacobian(pm2_e, qe) * dqe;
+
+K_Mhe = (1/2) * Mh * (vMh_e(1, 1).^2 + vMh_e(2, 1).^2);
+K_Mte = (1/2) * Mh * (vMt_e(1, 1).^2 + vMt_e(2, 1).^2);
+K_m1e = (1/2) * Mh * (vm1_e(1, 1).^2 + vm1_e(2, 1).^2);
+K_m2e = (1/2) * Mh * (vm2_e(1, 1).^2 + vm2_e(2, 1).^2);
+
+Ke = K_m1e + K_Mhe + K_Mte + K_m2e;
+
+% Extended inertia matrix
+De = Mh * jacobian(pMh, qe)' * jacobian(pMh, qe) + Mt * jacobian(pMt, qe)' * jacobian(pMt, qe) + m * jacobian(pm1, qe)' * jacobian(pm1, qe) + m * jacobian(pm2, qe)' * jacobian(pm2, qe);
+De = simplify(De);
+
+E = jacobian(P2e, qe);
+
+% Partial of any point on biped, hip chosen in this case
+dY_dq = jacobian(pMh_e,q);
+
+% Write impact map to a file
+% Inputs:
+%       q
+%       dq
+%       params
+%
+% Outputs: Matrices needed to compile impact map
+%       De: Extended inertia matrix
+%       E:
+%       dY_dq:
+%       
+write_symbolic_term_to_mfile(q,dq,params,De,E,dY_dq)
+
+
+%-------------------------------------------------------------------------%
+%%%% For controller
+
+% Vector fields
+fx = simplify([dq; D \ ((-1 * C * dq) - G)]);
+gx = [zeros(3, 2); B];
+
+% Bezier poly - needed for output function
+syms s delq
+%s = (q1 - q1_plus)/delq; 
+%delq = q1_minus - q1_plus 
+%ds/dt = dq1/delq; ds/dq1 = 1/delq;
+
+syms a21 a22 a23 a24 a25 
+syms a31 a32 a33 a34 a35
+
+a2 = [a21 a22 a23 a24 a25];
+a3 = [a31 a32 a33 a34 a35];
+M = 4;
+
+b2 = 0; b3 = 0;
+for k = 0:M
+    b2 = b2 + a2(1,k+1)*(factorial(M)/(factorial(k)*factorial(M-k)))*s^k*(1-s)^(M-k);
+end
+
+for k = 0:M
+    b3 = b3 + a3(1,k+1)*(factorial(M)/(factorial(k)*factorial(M-k)))*s^k*(1-s)^(M-k);
+end
+
+% Defining outputs
+
+h = [q2 - b2; q3 - b3];
+
+% y_dot = Lfh = dh/dx*fx - independent of gx*u since relative degree is 2
+% However, h is a function of (s,q2,q3), not q1 directly, so the following
+% is used:
+% dh/dq1 = dh/ds*ds/dq1 = dh/ds*1/delq
+%
+% Temporary variable that multiples the 1st column with 1/delq
+temp = sym(eye(6)); temp(1)  = 1/delq;
+
+Lfh = jacobian(h,[s; q2; q3; dq])*temp*fx;
+
+dLfh = jacobian(Lfh,[s; q2; q3; dq])*temp;
+
+% Write matrix used in feedback linearization - d/dx(Lfh) to file
+% Inputs:
+%       s = (q1 - q1_plus)/delq: gait timing variable
+%       delq = q1_minus - q1_plus: difference in cyclic variable during gait 
+%       dq1
+%       params: 
+%       a2: bezier coefficents (1st - 5th) for q2
+%       a3: bezier coefficents (1st - 5th) for q3
+%
+% Outputs:
+%       dLfh: partial of Lfh, to be used to compute L2fh and LgLfh
+%
+write_symbolic_term_to_mfile([s,delq],dq1,[a2,a3],dLfh);
+
+
+
+%-------------------------------------------------------------------------%
+%%%% For Zero Dynamics
+
+
+db_ds2 = 0;
+for k = 0:M-1
+    db_ds2 = db_ds2 + (a2(1,k+2)-a2(1,k+1))*(factorial(M)/(factorial(k)*factorial(M-k-1)))*s^k*(1-s)^(M-k-1);
+end
+
+db_ds3 = 0;
+for k = 0:M-1
+    db_ds3 = db_ds3 + (a3(1,k+2)-a3(1,k+1))*(factorial(M)/(factorial(k)*factorial(M-k-1)))*s^k*(1-s)^(M-k-1);
+end
+
+partial_db_ds2 = jacobian(db_ds2,s)*dq1/delq;
+
+partial_db_ds3 = jacobian(db_ds3,s)*dq1/delq;
+
+beta1 = [partial_db_ds2; partial_db_ds3]*dq1/delq;
+
+eta2 = jacobian(K,dq1);
+
+write_symbolic_term_to_mfile(s,[dq1, delq],[a2, a3],beta1)
+
+write_symbolic_term_to_mfile(q,dq,params,eta2)

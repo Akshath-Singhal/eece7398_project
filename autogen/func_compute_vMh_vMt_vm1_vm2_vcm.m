@@ -1,6 +1,6 @@
 function [vMh,vMt,vm1,vm2,vcm]= func_compute_vMh_vMt_vm1_vm2_vcm(q,dq,param)
 %%%%%%  func_compute_vMh_vMt_vm1_vm2_vcm.m
-%%%%  03/15/21
+%%%%  03/20/21
 %%%%
 %%%%
 %%%%
