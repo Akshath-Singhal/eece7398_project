@@ -1,6 +1,6 @@
 function [beta1]= func_compute_beta1(q,dq,param)
 %%%%%%  func_compute_beta1.m
-%%%%  03/20/21
+%%%%  03/21/21
 %%%%
 %%%%
 %%%%

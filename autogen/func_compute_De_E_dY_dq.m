@@ -1,6 +1,6 @@
 function [De,E,dY_dq]= func_compute_De_E_dY_dq(q,dq,param)
 %%%%%%  func_compute_De_E_dY_dq.m
-%%%%  03/20/21
+%%%%  03/21/21
 %%%%
 %%%%
 %%%%
@@ -29,28 +29,28 @@ De=zeros(5,5);
 De(1,1) = Mt*l^2 + Mh*r^2 + Mt*r^2 + (3*m*r^2)/2 - m*r^2*cos(q2) - 2*Mt*l*r*cos(q3);
 De(1,2) = -(m*r^2*(2*cos(q2) - 1))/4;
 De(1,3) = Mt*l*(l - r*cos(q3));
-De(1,4) = 0;
-De(1,5) = 0;
+De(1,4) = Mt*l*cos(q1 + q3) - (3*m*r*cos(q1))/2 + (m*r*cos(q1 + q2))/2 - Mh*r*cos(q1) - Mt*r*cos(q1);
+De(1,5) = Mt*l*sin(q1 + q3) - Mt*r*sin(q1) - (3*m*r*sin(q1))/2 - Mh*r*sin(q1) + (m*r*sin(q1 + q2))/2;
 De(2,1) = -(m*r^2*(2*cos(q2) - 1))/4;
 De(2,2) = (m*r^2)/4;
 De(2,3) = 0;
-De(2,4) = 0;
-De(2,5) = 0;
+De(2,4) = (m*r*cos(q1 + q2))/2;
+De(2,5) = (m*r*sin(q1 + q2))/2;
 De(3,1) = Mt*l*(l - r*cos(q3));
 De(3,2) = 0;
 De(3,3) = Mt*l^2;
-De(3,4) = 0;
-De(3,5) = 0;
-De(4,1) = 0;
-De(4,2) = 0;
-De(4,3) = 0;
-De(4,4) = 0;
+De(3,4) = Mt*l*cos(q1 + q3);
+De(3,5) = Mt*l*sin(q1 + q3);
+De(4,1) = Mt*l*cos(q1 + q3) - (3*m*r*cos(q1))/2 + (m*r*cos(q1 + q2))/2 - Mh*r*cos(q1) - Mt*r*cos(q1);
+De(4,2) = (m*r*cos(q1 + q2))/2;
+De(4,3) = Mt*l*cos(q1 + q3);
+De(4,4) = Mh + Mt + 2*m;
 De(4,5) = 0;
-De(5,1) = 0;
-De(5,2) = 0;
-De(5,3) = 0;
+De(5,1) = Mt*l*sin(q1 + q3) - Mt*r*sin(q1) - (3*m*r*sin(q1))/2 - Mh*r*sin(q1) + (m*r*sin(q1 + q2))/2;
+De(5,2) = (m*r*sin(q1 + q2))/2;
+De(5,3) = Mt*l*sin(q1 + q3);
 De(5,4) = 0;
-De(5,5) = 0;
+De(5,5) = Mh + Mt + 2*m;
 %%%%
 %%%%
 E=zeros(2,5);
