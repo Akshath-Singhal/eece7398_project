@@ -1,6 +1,10 @@
 function [vMh,vMt,vm1,vm2,vcm]= func_compute_vMh_vMt_vm1_vm2_vcm(q,dq,param)
 %%%%%%  func_compute_vMh_vMt_vm1_vm2_vcm.m
+<<<<<<< Updated upstream
 %%%%  02/27/21
+=======
+%%%%  03/30/21
+>>>>>>> Stashed changes
 %%%%
 %%%%
 %%%%

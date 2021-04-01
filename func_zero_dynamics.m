@@ -33,10 +33,13 @@ alpha2 = a(1:5);
 alpha3 = a(6:10);
 
 % find based on s and bezier definition
-q2 = 
-q3 = 
-dq2 = 
-dq3 = 
+M = 4;
+
+q2 = bezier(s,M,alpha2);
+q3 = bezier(s,M,alpha3)';
+
+dq2 = d_ds_bezier(s,M,alpha2)*dq1/delq;
+dq3 = d_ds_bezier(s,M,alpha3)*dq1/delq; 
 
 q = [q1, q2, q3];
 dq = [dq1, dq2, dq3];
@@ -61,8 +64,9 @@ params = [r,m,Mh,Mt,l,g];
 
 % E.g., 
 D1 = D(1, 1);
-D2 = 
-H1 = 
+D2 = D(1, 2:3);
+H = C*dq'+G;
+H1 = H(1);
 
 %------------------------------------------------------------------------%
 
@@ -99,15 +103,15 @@ beta1 = func_compute_beta1(s, [dq1, delq], [alpha2, alpha3]);
 % Outputs:
 %       db/ds
 %
-db_ds2 = 
-db_ds3 = 
+db_ds2 = d_ds_bezier(s,M,alpha2);
+db_ds3 = d_ds_bezier(s,M,alpha3);
 
 beta2 = [db_ds2; db_ds3]/delq;
 
 %------------------------------------------------------------------------%
 
 dz(1) = z(2);
-dz(2) = 
+dz(2) = (D1 + D2*beta2)\(-D2*beta1 - H1);
 
 dz = [dz(1), dz(2)]';
 end

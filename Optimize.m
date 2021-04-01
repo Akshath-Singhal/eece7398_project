@@ -6,11 +6,11 @@
 %------------------------------------------------------------------------%
 
 %[q1, dq1] pre impact conditions - should be negative for both
-z_minus = 
+z_minus = [-0.25, -0.25];
 
 % Bezier coefficients
-alpha =              %for q2 - alpha 3rd - 5th
-gamma =          %for q3 - alpha 3rd - 5th
+alpha = [0.3, 0.3, 0.3];             %for q2 - alpha 3rd - 5th
+gamma = [3.14, 3.14, 3.14];         %for q3 - alpha 3rd - 5th
 
 
 %   f0 = [q10, dq10, alpha(3-5)_q2, alpha(3-5)_q3]
@@ -28,9 +28,9 @@ f0 = [z_minus, alpha, gamma];   %parameters that need to be optimized
 % Lower and upper bounds for optimizer - [q1 q1_dot, alpha q2, alpha q3]
 %
 % epsilon for angles
-eps = 
+eps = 0.2;
 % epsilon for velocity
-eps_v = 
+eps_v = 0.2;
 lb = [z_minus(1)-eps, z_minus(2)-eps_v, alpha-eps, gamma-eps];
 ub = [z_minus(1)+eps, z_minus(2)+eps_v, alpha+eps, gamma+eps];
 
@@ -128,7 +128,7 @@ for i = 1:length(t_sol)
     u = func_compute_control_action(z_sol(i,:),a,s_params);
     
     % Cost = sum of norms of control action
-    J = 
+    J = J + norm(u);
 end
 
 end
