@@ -1,6 +1,6 @@
 function [dLfh]= func_compute_dLfh(q,dq,param)
 %%%%%%  func_compute_dLfh.m
-%%%%  03/30/21
+%%%%  04/01/21
 %%%%
 %%%%
 %%%%

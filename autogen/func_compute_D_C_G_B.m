@@ -1,6 +1,6 @@
 function [D,C,G,B]= func_compute_D_C_G_B(q,dq,param)
 %%%%%%  func_compute_D_C_G_B.m
-%%%%  03/30/21
+%%%%  04/01/21
 %%%%
 %%%%
 %%%%
