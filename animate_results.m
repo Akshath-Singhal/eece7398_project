@@ -86,5 +86,4 @@ for i = 1:length(t)
     %legend([p1, p2, p3],{'stance leg','swing leg','torso'});
 
     drawnow limitrate
-    pause(0.1);
 end

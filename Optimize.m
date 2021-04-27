@@ -10,7 +10,7 @@ z_minus = [-0.25, -0.25];
 
 % Bezier coefficients
 alpha = [0.3, 0.3, 0.3];             %for q2 - alpha 3rd - 5th
-gamma = [3.14, 3.14, 3.14];         %for q3 - alpha 3rd - 5th
+gamma = [3, 3, 3];         %for q3 - alpha 3rd - 5th
 
 
 %   f0 = [q10, dq10, alpha(3-5)_q2, alpha(3-5)_q3]
@@ -28,9 +28,9 @@ f0 = [z_minus, alpha, gamma];   %parameters that need to be optimized
 % Lower and upper bounds for optimizer - [q1 q1_dot, alpha q2, alpha q3]
 %
 % epsilon for angles
-eps = 0.2;
+eps = 0.1;
 % epsilon for velocity
-eps_v = 0.2;
+eps_v = 0.1;
 lb = [z_minus(1)-eps, z_minus(2)-eps_v, alpha-eps, gamma-eps];
 ub = [z_minus(1)+eps, z_minus(2)+eps_v, alpha+eps, gamma+eps];
 
